@@ -37,6 +37,7 @@
 ;;
 ;; M-x totp-for
 
+(require 'bindat)
 (require 'unibyte-base32)
 (require 'hmac-sha1)
 (require 'netrc)
