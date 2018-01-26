@@ -57,7 +57,7 @@
   (mapconcat #'(lambda (x) (format "%.2x" x)) s ""))
 
 (defun totp (totp-secret)
-  "Return a 6 digit totp seeded by a base32 encoded totp-secret"
+  "Return a 6 digit totp seeded by a base32 encoded TOTP-SECRET"
   (let* ((totp-secret (unibyte-base32-decode-string totp-secret))
          (totp-interval 30)
          ;; remind me to update this in 2038
@@ -75,8 +75,7 @@
     ;; 3) Take 4 bytes from H starting at O bytes MSB (network order)
     ;; 4) Discard the most significant bit and store as unsigned 32-bit integer I
     ;; 5) Token is lowest N digits of I in base 10, zero pad up to N if required
-    (let* (
-           (totp-hmac (hmac-sha1 totp-secret totp-time))
+    (let* ((totp-hmac (hmac-sha1 totp-secret totp-time))
            (totp-offset (logand (aref totp-hmac (- (length totp-hmac) 1)) #xf))
            (totp-pin (bindat-unpack '((:totp-pin u32)) (substring totp-hmac totp-offset (+ totp-offset 4))))
            (totp-pin (bindat-get-field totp-pin ':totp-pin))
