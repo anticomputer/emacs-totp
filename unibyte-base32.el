@@ -345,18 +345,19 @@ unibyte-base32-encoder-program.")
       (kill-buffer (current-buffer)))))
 
 (defun unibyte-base32-decode (string)
-  (save-excursion
-    (set-buffer (get-buffer-create " *unibyte-base32-decode*"))
-    (toggle-enable-multibyte-characters)
-    (erase-buffer)
-    (insert string)
-    (unibyte-base32-decode-region (point-min) (point-max))
-    (goto-char (point-max))
-    (skip-chars-backward " \t\r\n")
-    (delete-region (point-max) (point))
-    (prog1
-	(buffer-string)
-      (kill-buffer (current-buffer)))))
+  (let ((string (string-to-unibyte string)))
+    (save-excursion
+      (set-buffer (get-buffer-create " *unibyte-base32-decode*"))
+      (toggle-enable-multibyte-characters)
+      (erase-buffer)
+      (insert string)
+      (unibyte-base32-decode-region (point-min) (point-max))
+      (goto-char (point-max))
+      (skip-chars-backward " \t\r\n")
+      (delete-region (point-max) (point))
+      (prog1
+          (buffer-string)
+        (kill-buffer (current-buffer))))))
 
 (fset 'unibyte-base32-decode-string 'unibyte-base32-decode)
 (fset 'unibyte-base32-encode-string 'unibyte-base32-encode)
