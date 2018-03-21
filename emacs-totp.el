@@ -41,6 +41,7 @@
 (require 'unibyte-base32)
 (require 'hmac-sha1)
 (require 'netrc)
+(require 'cl-lib)
 
 (defun totp-pull-authinfo (machine)
   "Pull a base32 encoded secret for MACHINE from authinfo"
@@ -69,8 +70,8 @@
                        ;; calculate C as the number of times TI has elapsed after TO
                        (:low . ,(/ (truncate (time-to-seconds)) totp-interval))))))
     ;; 11:00AM, restate my assumptions
-    (assert (and (stringp totp-secret) (not (string-empty-p totp-secret))))
-    (assert (and (stringp totp-time) (not (string-empty-p totp-time))))
+    (cl-assert (and (stringp totp-secret) (not (string-empty-p totp-secret))))
+    (cl-assert (and (stringp totp-time) (not (string-empty-p totp-time))))
     ;; 1) HMAC hash H with C as the message and K as the key
     ;; 2) Take the least 4 significant bits of H and use it as an offset O
     ;; 3) Take 4 bytes from H starting at O bytes MSB (network order)
